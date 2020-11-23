@@ -1,25 +1,6 @@
 #include <iostream>
-#include <string>
-#include <queue>
-#include <regex> //Libreria para validacion
-using namespace std;
-
-//Menu Inicial(Estatico)
-
-void start_menu();
-
-//Primera Lista(Dinamico)
-//void principal_hardware();
-//void storage();
-//void cooling();
-//void peripherals();
-//void audio_video();
-void option_menu();
-//void product_agregate();
-void product_show();
-
-
-
+#include <regex> //Libreria para comparacion de cadenas
+#include "Project-PEDv1.h"      //!Header file for keep organizated code
 
 //Mediante un menú se deberán poder agregar, quitar y modificar establecimientos de comida. 
 //Además cada comedor deberá poder agregar, quitar y modificar platos de comida a su propio menú. 
@@ -27,100 +8,9 @@ void product_show();
 //total de dinero a pagar más una comisión de $5.00 por entrega a domicilio.
 
 int category = 0;
-
-
-struct Product
-{
-    string name;
-    string type;
-    string brand;
-    float price;
-};
-
-
-
-
-void printProduct(Product p)
-
-{
-    cout << "-------------------------------------" << endl;
-    cout << "Nombre: " << p.name << endl;
-    cout << "Tipo: " << p.type << endl;
-    cout << "Marca: " << p.brand << endl;
-    cout << "Precio: " << p.price << endl;
-    cout << "-------------------------------------" << endl;
-}
-
-
-
-void printCategory(queue<Product> q)
-{
-    if (!q.empty())
-    {
-        queue<Product> temp;
-
-        while (!q.empty())
-        {
-            printProduct(q.front());
-            temp.push(q.front());
-            q.pop();
-        }
-
-        while (!temp.empty())
-        {
-            q.push(temp.front());
-            temp.pop();
-        }
-    }
-    else
-    {
-        cout << "Esta Categoria esta Vacia" << endl;
-    }
-}
-
-
-
-
-int selectCategory()
-
-{
-    int selected = 0;
-
-    cout << "Seleccione la categoria que necesita:" << endl;
-    cout << "1. Hardware Principal " << endl;
-    cout << "2. Almacenamiento" << endl;
-    cout << "3. Enfriamiento" << endl;
-    cin >> selected;
-    cin.ignore();
-
-    return selected;
-}
-
-
 queue<Product> principal_hardware, storage, cooling;
 
-
-//Validacion si ingresa algo que no sea numero entero
-int validation() {
-    string input;
-    while (true) {
-        cout << "\n\t\t\tOpcion elegida: ";
-        cin >> input;
-        if (regex_match(input, regex("^[1-9]*$"))) {
-            return atoi(&input[0]);
-        }
-        else {
-            cout << "\n\n\n\tOpcion invalida, ingrese un numero entero '_'\n" << endl;
-            //system("pause");
-            //system("cls");
-        }
-    }
-}
-
-
 int main() {
-
-    
     //Mensaje de Bienvenida
     cout << "\n\t\t\t __________________________" << endl;
     cout << "\t\t\t|                          |" << endl;
@@ -190,13 +80,73 @@ void start_menu() {
     } while (repeat == 1);
 }
 
+void printProduct(Product p)
+{
+    cout << "-------------------------------------" << endl;
+    cout << "Nombre: " << p.name << endl;
+    cout << "Tipo: " << p.type << endl;
+    cout << "Marca: " << p.brand << endl;
+    cout << "Precio: " << p.price << endl;
+    cout << "-------------------------------------" << endl;
+}
 
+void printCategory(queue<Product> q)
+{
+    if (!q.empty())
+    {
+        queue<Product> temp;
 
+        while (!q.empty())
+        {
+            printProduct(q.front());
+            temp.push(q.front());
+            q.pop();
+        }
+
+        while (!temp.empty())
+        {
+            q.push(temp.front());
+            temp.pop();
+        }
+    }
+    else
+    {
+        cout << "Esta Categoria esta Vacia" << endl;
+    }
+}
+
+int selectCategory()
+{
+    int selected = 0;
+
+    cout << "Seleccione la categoria que necesita:" << endl;
+    cout << "1. Hardware Principal " << endl;
+    cout << "2. Almacenamiento" << endl;
+    cout << "3. Enfriamiento" << endl;
+    cin >> selected;
+    cin.ignore();
+
+    return selected;
+}
+
+//Validacion si ingresa algo que no sea numero entero
+int validation() {
+    string input;
+    while (true) {
+        cout << "\n\t\t\tOpcion elegida: ";
+        cin >> input;
+        if (regex_match(input, regex("^[1-9]*$"))) {
+            return atoi(&input[0]);
+        }
+        else {
+            cout << "\n\n\n\tOpcion invalida, ingrese un numero entero '_'\n" << endl;
+            //system("pause");
+            //system("cls");
+        }
+    }
+}
 
 void option_menu() {
-
-    
-
     int repeat = 1;
 
     do {
@@ -244,12 +194,8 @@ void option_menu() {
     } while (repeat == 1);
 }
 
-
-
-Product product_agregate() {
-    
+void product_agregate() {
     Product product;
-
     cout << "----------------------Agregar Producto---------------------" << endl;
 
     do
@@ -300,16 +246,10 @@ Product product_agregate() {
             cout << "Seleccione una categoria correcta" << endl;
         }
     } while (category < 1 || category > 3);
-    return product;
 }
 
-
-
-
 void product_show() {
-
-
-    queue<Product> principal_hardware, storage, cooling;
+    //queue<Product> principal_hardware, storage, cooling;
     cout << "----------------------Mostrar un producto---------------------" << endl;
 
     do
