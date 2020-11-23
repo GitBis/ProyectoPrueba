@@ -7,8 +7,24 @@
 //Finalmente un cliente puede ordenar cualquier cantidad de platos y el programa debe calcular el 
 //total de dinero a pagar más una comisión de $5.00 por entrega a domicilio.
 
+/**
+ * TODO:
+ * *Suave
+ * !Agregar:
+ *  -Por categoria
+ * !Eliminar:
+ *  -Por categoria
+ * !Vaciar:
+ *  -Por categoria
+ * ?Editar
+ * 
+ * *yoxd
+ * !Todo lo relacionado con el carrito xD
+ */
+
 int category = 0;
 queue<Product> principal_hardware, storage, cooling;
+int pastId = 0;
 
 int main() {
     //Mensaje de Bienvenida
@@ -83,6 +99,7 @@ void start_menu() {
 void printProduct(Product p)
 {
     cout << "-------------------------------------" << endl;
+    cout << "Nombre: " << p.id << endl;
     cout << "Nombre: " << p.name << endl;
     cout << "Tipo: " << p.type << endl;
     cout << "Marca: " << p.brand << endl;
@@ -206,7 +223,8 @@ void product_agregate() {
         {
            // Product product;
             int priced = 0;
-
+            
+            product.id = pastId + 1;
             cout << "\nNombre del producto: " << endl;
             getline(cin, product.name);
             cout << "Tipo de producto: " << endl;
