@@ -411,7 +411,7 @@ void addToCart(Product p) {
     } else{
         bool notEnough = false;
 
-        print_product(p);
+        printProduct(p);
 
         do{
             cout << "\nCantidad a comprar: ";
@@ -429,9 +429,13 @@ void addToCart(Product p) {
                     notEnough = true;
                 } else{
                     cart.products.push_back(intoCart);
-                    cart.total += (intoCart.cant * intoCart.price);
+                    cart.total += ((float)(intoCart.cant) * intoCart.price);
                     cout << "Producto agregado correctamente" << endl;
-                    p.cant = p.cant - intoCart.cant;  //i dont think this its going to work
+                    
+                    //we're going to make it work
+                    modifyQuantity(intoCart.cant, intoCart.id, principal_hardware);
+                    modifyQuantity(intoCart.cant, intoCart.id, storage);
+                    modifyQuantity(intoCart.cant, intoCart.id, cooling);
                 }
                 
             } else{
@@ -448,4 +452,29 @@ void checkout() {
     cout << "Gracias por comprar con nosotros :)" << endl;
     cart.products.clear();
     cart.total = 0.0f;
+}
+
+void modifyQuantity(int selledQuant, int id, deque<Product> dq) {
+    Product exist = searchItem(id, dq);
+    if(exist.id <= 0) {
+        cout << ".";
+        return;
+    }
+
+    deque<Product> temp;
+
+    while(!dq.empty()) {
+        if(dq.front().id == id) {
+            //dq.front().cant -= selledQuant;
+            dq.front().cant = dq.front().cant - selledQuant;
+        }
+
+        temp.push_back(dq.front());
+        dq.pop_front();
+    }
+
+    while(!temp.empty()) {
+        dq.push_back(temp.front());
+        temp.pop_front();
+    }
 }
