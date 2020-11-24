@@ -12,7 +12,8 @@ struct Product
     int cant;
 };
 
-struct Cart{
+struct Cart
+{
     deque<Product> products;
     float total;
 };
@@ -26,3 +27,11 @@ void printCategory(deque<Product> q);
 int selectCategory();
 int validation();
 void start_menu();
+
+/** Cart methods **/
+
+Product searchItem(int id, int dqSelected);
+void displayCartOptions();
+void addToCart(Product p);
+void deleteFromCart(Product p);
+void checkout();
