@@ -117,7 +117,7 @@ void printCategory(deque<Product> q)
         {
             printProduct(q.front());
             temp.push_back(q.front());
-            temp.pop_front();
+            q.pop_front();//xdD
         }
 
         while (!temp.empty())
