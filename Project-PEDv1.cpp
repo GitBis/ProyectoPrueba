@@ -9,22 +9,21 @@
 
 /**
  * TODO:
- * *Suave
- * !Agregar:
- *  -Por categoria
- * !Eliminar:
- *  -Por categoria
- * !Vaciar:
- *  -Por categoria
- * ?Editar
- * 
- * *yoxd
- * !Todo lo relacionado con el carrito xD
+ * *Agregar a carrito:
+ *  ?Cantidad de productos agregado al carrito
+ * *Eliminar del carrito
+ *  ?Eliminar por ID
+ * *Vaciar carrito
+ * *Factura bonita:
+ *  ?Subtotales
+ *  ?Total
  */
 
 int category = 0;
-deque<Product> principal_hardware, storage, cooling;
 int pastId = 0;
+
+deque<Product> principal_hardware, storage, cooling;
+Cart cart;
 
 int main() {
     //Mensaje de Bienvenida
@@ -36,6 +35,9 @@ int main() {
     cout << "\t\t\t|__________________________|\n\n" << endl;
     system("pause");
     system("cls");
+    
+    cart.total = 0.0f;
+
     start_menu();
     return 0;
 }
@@ -99,15 +101,16 @@ void start_menu() {
 void printProduct(Product p)
 {
     cout << "-------------------------------------" << endl;
-    cout << "Nombre: " << p.id << endl;
+    cout << "ID: " << p.id << endl;
     cout << "Nombre: " << p.name << endl;
     cout << "Tipo: " << p.type << endl;
     cout << "Marca: " << p.brand << endl;
     cout << "Precio: " << p.price << endl;
+    cout << "Cantidad: " << p.cant << endl;
     cout << "-------------------------------------" << endl;
 }
 
-void printCategory(deque<Product> q)
+void printCategory(deque<Product> q)    //it cpuld be an error
 {
     if (!q.empty())
     {
@@ -117,7 +120,7 @@ void printCategory(deque<Product> q)
         {
             printProduct(q.front());
             temp.push_back(q.front());
-            q.pop_front();//xdD
+            q.pop_front();
         }
 
         while (!temp.empty())
@@ -152,6 +155,7 @@ int validation() {
     while (true) {
         cout << "\n\t\t\tOpcion elegida: ";
         cin >> input;
+        cin.ignore();
         if (regex_match(input, regex("^[1-9]*$"))) {
             return atoi(&input[0]);
         }
@@ -175,7 +179,7 @@ void option_menu() {
         cout << "\t\t\t| 1) Agregar producto a una categoria   |" << endl;
         cout << "\t\t\t|_______________________________________|" << endl;
         cout << "\t\t\t|                                       | " << endl;
-        cout << "\t\t\t| 2) Eliminar un producto               |" << endl;
+        cout << "\t\t\t| 2) Eliminar un producto de la tienda  |" << endl;
         cout << "\t\t\t|_______________________________________|" << endl;
         cout << "\t\t\t|                                       | " << endl;
         cout << "\t\t\t| 3) Vaciar una categoria               |" << endl;
@@ -183,12 +187,12 @@ void option_menu() {
         cout << "\t\t\t|                                       | " << endl;
         cout << "\t\t\t| 4) Mostrar pruductos de una categoria |" << endl;
         cout << "\t\t\t|_______________________________________|" << endl;
-        //cout << "\t\t\t|                                       | " << endl;
-        //cout << "\t\t\t| 5) Editar categoria                   |" << endl;
-        //cout << "\t\t\t|_______________________________________|" << endl;
+        cout << "\t\t\t|                                       | " << endl;
+        cout << "\t\t\t| 5) Carrito                            |" << endl;
+        cout << "\t\t\t|_______________________________________|" << endl;
         cout << "\t _____________" << endl;
         cout << "\t|             |" << endl;
-        cout << "\t| 5) Regresar |" << endl;
+        cout << "\t| 6) Regresar |" << endl;
         cout << "\t|_____________|" << endl;
         //cout << "\n\t\t\tOpcion elegida: ";
         int option = validation();
@@ -197,14 +201,23 @@ void option_menu() {
 
         switch (option) {
 
-        case 1: product_agregate(); break;
-        //case 2: storage(); break;
-        //case 3: cooling(); break;
-        case 4: product_show(); break;
-        case 5: start_menu(); break;
-        default: cout << "\n\n\n\t\t    Esa opcion no existe en el menu :(\n" << endl;
-            cout << "\t\t-----------------------------------------\n\n\n" << endl;
-            break;
+            case 1:
+                product_agregate();
+                break;
+            //case 2: storage(); break;
+            //case 3: cooling(); break;
+            case 4:
+                product_show();
+                break;
+            case 5:
+                displayCartOptions();
+                break;
+            case 6: 
+                start_menu(); 
+                break;
+            default: cout << "\n\n\n\t\t    Esa opcion no existe en el menu :(\n" << endl;
+                cout << "\t\t-----------------------------------------\n\n\n" << endl;
+                break;
         }
         system("pause");
         system("cls");
@@ -223,6 +236,7 @@ void product_agregate() {
         {
            // Product product;
             int priced = 0;
+            int cantity = 0;
             
             product.id = pastId + 1;
             cout << "\nNombre del producto: " << endl;
@@ -231,16 +245,26 @@ void product_agregate() {
             getline(cin, product.type);
             cout << "Marca del producto: " << endl;
             getline(cin, product.brand);
+            cout << "Cantidad de productos: ";
+            cin >> cantity;
             cout << "Precio del producto en dolares: $ ";
             cin >> priced;
+            cin.ignore();
 
             while (priced <= 0)
             {
-                cout << "\nIngrese un valor valido para el precio, mayor a 0)" << endl;
+                cout << "\nIngrese un valor valido para el precio (mayor a 0)" << endl;
                 cin >> priced;
             }
 
+            while (cantity <= 0)
+            {
+                cout << "\nIngrese mas de un producto (mayor a 0)" << endl;
+                cin >> cantity;
+            }
+
             product.price = priced;
+            product.cant = cantity;
 
             if (category == 1)
             {
@@ -298,57 +322,130 @@ void product_show() {
     } while (category < 1 || category > 3);
 }
 
+void displayCartOptions() {
+    cout << "----------------------Carrito---------------------" << endl;
 
+    bool keepGoing = false;
 
-//void principal_hardware() {
+    do
+    {
+        cout << "Seleccione una opcion:" << endl;
+        cout << "1. Agregar producto al carrito" << endl;
+        cout << "2. Ver productos del carrito" << endl;
+        cout << "3. Vaciar Carrito" << endl;
+        cout << "4. Pagar" << endl;
+        cout << "5. Volver" << endl;
+        
+        int selected = validation();
 
+        if(selected >= 1 && selected <= 5) {
+            if(selected == 1) {
+                printCategory(cart.products);
+                cout << "Ingrese la ID del producto deseado de la lista (tener en cuenta la cantidad disponible)" << endl;
+                int selectedProduct = validation();
 
-    // Procesadores
-    // Motherboards
-    // Memoria Ram
-    // Fuentes de Poder
-    // Tarjetas de Video
-    // Case
+                addToCart(searchItem(selectedProduct, principal_hardware));
+                addToCart(searchItem(selectedProduct, storage));
+                addToCart(searchItem(selectedProduct, cooling)); 
+            } else if(selected == 2) {
+                if(!cart.products.empty()) {
+                    printCategory(cart.products);
+                } else{
+                    cout << "Lo sentimos, pero el carrito esta vacio!" << endl;
+                }
+            } else if(selected == 3) {
+                if(!cart.products.empty()) {
+                    cart.products.clear();
+                } else{
+                    cout << "Lo sentimos, pero el carrito esta vacio!" << endl;
+                }
+            } else if(selected == 4) {
+                if(!cart.products.empty()) {
+                    checkout();
+                } else{
+                    cout << "Lo sentimos, pero el carrito esta vacio!" << endl;
+                }
+            } else if(selected == 5) {
+                option_menu();
+            }
 
-//}
+            keepGoing = false;
+        } else{
+            cout << "Seleccione una categoria correcta" << endl;
+            keepGoing = true;
+        }
+    } while (keepGoing);
+}
 
-//void storage() {
+/*Function to search an item on any deque,
+ *if the item is in the deque return the Product, 
+ *if the item isn't found return a Product with id = -1
+ */
+Product searchItem(int id, deque<Product> dq) {
+    Product p = {-1, "", "", "", 0.0, 0};
+    deque<Product> temp;
 
+    while(!dq.empty()) {
+        Product searched = dq.front();
+        
+        if(searched.id == id) {
+            p = searched;
+        }
 
-    // Discos duros
-    // Discos Externos
-    // SSD
-    // M.2
-    // Memoria USB
-    // Micro SD
-    // Enclosure
-//}
+        temp.push_back(searched);
+        dq.pop_front();
+    }
 
-//void cooling() {
+    while(!temp.empty()) {
+        dq.push_back(temp.front());
+        temp.pop_front();
+    }
 
-    // Coolers de Aire
-    // Enfriamiento Líquido
-    // Enfriamiento Custom
-    // Cooler Laptops
-    // Ventiladores
-    // Pasta Térmica
-//}
+    return p;
+}
 
-//void peripherals() {
+void addToCart(Product p) {
+    if(p.id <= 0) {
+        cout << ".";
+        return;
+    } else{
+        bool notEnough = false;
 
+        print_product(p);
 
-    // Mouse
-    // Mousepad
-    // Teclados
-    // Combos Teclado Mouse
-//}
-//void audio_video() {
+        do{
+            cout << "\nCantidad a comprar: ";
+            int quantity = validation();
 
+            if(quantity > 0) {
+                notEnough = false;
+                
+                Product intoCart = p;
+                intoCart.cant = quantity;
 
-    // Headset
-    // Bocinas
-    // Monitores
-    // Proyectores
-    // Cámaras Web
-//}
+                if(intoCart.cant > p.cant) {
+                    cout << "Lo sentimos no hay suficientes en stock!!" << endl;
+                    cout << "Seleccione una cantidad disponible en stock" << endl;
+                    notEnough = true;
+                } else{
+                    cart.products.push_back(intoCart);
+                    cart.total += (intoCart.cant * intoCart.price);
+                    cout << "Producto agregado correctamente" << endl;
+                    p.cant = p.cant - intoCart.cant;  //i dont think this its going to work
+                }
+                
+            } else{
+                cout << "Debe agregar almenos un producto" << endl;
+                notEnough = true;
+            }
+        }while(notEnough);
+    }
+}
 
+void checkout() {
+    printCategory(cart.products);
+    cout << "Su total es de $" << cart.total << endl;
+    cout << "Gracias por comprar con nosotros :)" << endl;
+    cart.products.clear();
+    cart.total = 0.0f;
+}

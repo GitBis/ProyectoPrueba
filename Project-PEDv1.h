@@ -9,15 +9,16 @@ struct Product
     string type;
     string brand;
     float price;
+    int cant;
+};
+
+struct Cart
+{
+    deque<Product> products;
+    float total;
 };
 
 void start_menu();
-//Primera Lista(Dinamico)
-//void principal_hardware();
-//void storage();
-//void cooling();
-//void peripherals();
-//void audio_video();
 void option_menu();
 void product_agregate();
 void product_show();
@@ -26,3 +27,10 @@ void printCategory(deque<Product> q);
 int selectCategory();
 int validation();
 void start_menu();
+
+/** Cart methods **/
+
+Product searchItem(int id, deque<Product> dq);
+void displayCartOptions();
+void addToCart(Product p);
+void checkout();
