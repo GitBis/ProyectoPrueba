@@ -331,11 +331,10 @@ void displayCartOptions() {
     {
         cout << "Seleccione una opcion:" << endl;
         cout << "1. Agregar producto al carrito" << endl;
-        cout << "2. Eliminar producto del carrito" << endl;
-        cout << "3. Ver productos del carrito" << endl;
-        cout << "4. Vaciar Carrito" << endl;
-        cout << "5. Pagar" << endl;
-        cout << "6. Volver" << endl;
+        cout << "2. Ver productos del carrito" << endl;
+        cout << "3. Vaciar Carrito" << endl;
+        cout << "4. Pagar" << endl;
+        cout << "5. Volver" << endl;
         
         int selected = validation();
 
@@ -345,36 +344,28 @@ void displayCartOptions() {
                 cout << "Ingrese la ID del producto deseado de la lista (tener en cuenta la cantidad disponible)" << endl;
                 int selectedProduct = validation();
 
-                addToCart(searchItem(selectedProduct, 4));
+                addToCart(searchItem(selectedProduct, principal_hardware));
+                addToCart(searchItem(selectedProduct, storage));
+                addToCart(searchItem(selectedProduct, cooling)); 
             } else if(selected == 2) {
                 if(!cart.products.empty()) {
-                    //delete
+                    printCategory(cart.products);
                 } else{
                     cout << "Lo sentimos, pero el carrito esta vacio!" << endl;
                 }
             } else if(selected == 3) {
                 if(!cart.products.empty()) {
-                    printCategory(cart.products);
+                    cart.products.clear();
                 } else{
                     cout << "Lo sentimos, pero el carrito esta vacio!" << endl;
                 }
             } else if(selected == 4) {
                 if(!cart.products.empty()) {
-                    cart.products.clear();
+                    checkout();
                 } else{
                     cout << "Lo sentimos, pero el carrito esta vacio!" << endl;
                 }
             } else if(selected == 5) {
-                if(!cart.products.empty()) {
-                    printCategory(cart.products);
-                    cout << "Su total es de $" << cart.total << endl;
-                    cout << "Gracias por comprar con nosotros" << endl;
-                    cart.products.clear();
-                    cart.total = 0.0f;
-                } else{
-                    cout << "Lo sentimos, pero el carrito esta vacio!" << endl;
-                }
-            } else if(selected == 6) {
                 option_menu();
             }
 
@@ -389,91 +380,33 @@ void displayCartOptions() {
 /*Function to search an item on any deque,
  *if the item is in the deque return the Product, 
  *if the item isn't found return a Product with id = -1
- *
- * Params:
- * -id: Product ID
- * -dqSelected: an int representing what deque will be used:
- *      1 = principal_hardware
- *      2 = storage
- *      3 = cooling
- *      4 = cart.products
  */
-Product searchItem(int id, int dqSelected) {
+Product searchItem(int id, deque<Product> dq) {
     Product p = {-1, "", "", "", 0.0, 0};
     deque<Product> temp;
 
-    if(dqSelected == 1) {
-        while(!principal_hardware.empty()) {
-            Product searched = principal_hardware.front();
-            
-            if(searched.id == id) {
-                p = searched;
-            }
-
-            temp.push_back(searched);
-            principal_hardware.pop_front();
+    while(!dq.empty()) {
+        Product searched = dq.front();
+        
+        if(searched.id == id) {
+            p = searched;
         }
 
-        while(!temp.empty()) {
-            principal_hardware.push_back(temp.front());
-            temp.pop_front();
-        }
-    } else if(dqSelected == 2) {
-        while(!storage.empty()) {
-            Product searched = storage.front();
-            
-            if(searched.id == id) {
-                p = searched;
-            }
-
-            temp.push_back(searched);
-            storage.pop_front();
-        }
-
-        while(!temp.empty()) {
-            storage.push_back(temp.front());
-            temp.pop_front();
-        }
-    } else if(dqSelected == 3) {
-        while(!cooling.empty()) {
-            Product searched = cooling.front();
-            
-            if(searched.id == id) {
-                p = searched;
-            }
-
-            temp.push_back(searched);
-            cooling.pop_front();
-        }
-
-        while(!temp.empty()) {
-            cooling.push_back(temp.front());
-            temp.pop_front();
-        }
-    } else if(dqSelected == 4) {
-        while(!cart.products.empty()) {
-            Product searched = cart.products.front();
-            
-            if(searched.id == id) {
-                p = searched;
-            }
-
-            temp.push_back(searched);
-            cart.products.pop_front();
-        }
-
-        while(!temp.empty()) {
-            cart.products.push_back(temp.front());
-            temp.pop_front();
-        }
+        temp.push_back(searched);
+        dq.pop_front();
     }
+
+    while(!temp.empty()) {
+        dq.push_back(temp.front());
+        temp.pop_front();
+    }
+
     return p;
 }
 
 void addToCart(Product p) {
     if(p.id <= 0) {
-        cout << "Producto no encontrado!" <<endl;
-        cout << "Vuelve a intentar" <<endl;
+        cout << ".";
         return;
     } else{
         bool notEnough = false;
@@ -498,7 +431,7 @@ void addToCart(Product p) {
                     cart.products.push_back(intoCart);
                     cart.total += (intoCart.cant * intoCart.price);
                     cout << "Producto agregado correctamente" << endl;
-                    //p.cant = p.cant - intoCart.cant;  //i dont think this its going to work
+                    p.cant = p.cant - intoCart.cant;  //i dont think this its going to work
                 }
                 
             } else{
@@ -507,4 +440,12 @@ void addToCart(Product p) {
             }
         }while(notEnough);
     }
-} 
+}
+
+void checkout() {
+    printCategory(cart.products);
+    cout << "Su total es de $" << cart.total << endl;
+    cout << "Gracias por comprar con nosotros :)" << endl;
+    cart.products.clear();
+    cart.total = 0.0f;
+}

@@ -30,8 +30,7 @@ void start_menu();
 
 /** Cart methods **/
 
-Product searchItem(int id, int dqSelected);
+Product searchItem(int id, deque<Product> dq);
 void displayCartOptions();
 void addToCart(Product p);
-void deleteFromCart(Product p);
 void checkout();
