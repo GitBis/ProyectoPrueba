@@ -1,5 +1,5 @@
 #include <string>
-#include <queue>
+#include <deque>
 using namespace std;
 
 struct Product
@@ -22,7 +22,7 @@ void option_menu();
 void product_agregate();
 void product_show();
 void print_product(Product p);
-void printCategory(queue<Product> q);
+void printCategory(deque<Product> q);
 int selectCategory();
 int validation();
 void start_menu();

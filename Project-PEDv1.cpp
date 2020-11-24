@@ -23,7 +23,7 @@
  */
 
 int category = 0;
-queue<Product> principal_hardware, storage, cooling;
+deque<Product> principal_hardware, storage, cooling;
 int pastId = 0;
 
 int main() {
@@ -107,23 +107,23 @@ void printProduct(Product p)
     cout << "-------------------------------------" << endl;
 }
 
-void printCategory(queue<Product> q)
+void printCategory(deque<Product> q)
 {
     if (!q.empty())
     {
-        queue<Product> temp;
+        deque<Product> temp;
 
         while (!q.empty())
         {
             printProduct(q.front());
-            temp.push(q.front());
-            q.pop();
+            temp.push_back(q.front());
+            temp.pop_front();
         }
 
         while (!temp.empty())
         {
-            q.push(temp.front());
-            temp.pop();
+            q.push_back(temp.front());
+            temp.pop_front();
         }
     }
     else
@@ -244,15 +244,15 @@ void product_agregate() {
 
             if (category == 1)
             {
-                principal_hardware.push(product);
+                principal_hardware.push_back(product);
             }
             else if (category == 2)
             {
-                storage.push(product);
+                storage.push_back(product);
             }
             else if (category == 3)
             {
-                cooling.push(product);
+                cooling.push_back(product);
             }
 
             cout << "\nProducto agregado correctamente" << endl;
