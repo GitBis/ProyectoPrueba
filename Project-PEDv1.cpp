@@ -9,14 +9,6 @@
 
 /**
  * TODO:
- * *Suave
- * !Agregar:
- *  -Por categoria
- * !Eliminar:
- *  -Por categoria
- * !Vaciar:
- *  -Por categoria
- * ?Editar
  * 
  * *yoxd
  * !Todo lo relacionado con el carrito xD
@@ -99,11 +91,12 @@ void start_menu() {
 void printProduct(Product p)
 {
     cout << "-------------------------------------" << endl;
-    cout << "Nombre: " << p.id << endl;
+    cout << "ID: " << p.id << endl;
     cout << "Nombre: " << p.name << endl;
     cout << "Tipo: " << p.type << endl;
     cout << "Marca: " << p.brand << endl;
     cout << "Precio: " << p.price << endl;
+    cout << "Cantidad: " << p.cant << endl;
     cout << "-------------------------------------" << endl;
 }
 
@@ -223,6 +216,7 @@ void product_agregate() {
         {
            // Product product;
             int priced = 0;
+            int cantity = 0;
             
             product.id = pastId + 1;
             cout << "\nNombre del producto: " << endl;
@@ -231,16 +225,26 @@ void product_agregate() {
             getline(cin, product.type);
             cout << "Marca del producto: " << endl;
             getline(cin, product.brand);
+            cout << "Cantidad de productos: ";
+            cin >> cantity;
             cout << "Precio del producto en dolares: $ ";
             cin >> priced;
+            cin.ignore();
 
             while (priced <= 0)
             {
-                cout << "\nIngrese un valor valido para el precio, mayor a 0)" << endl;
+                cout << "\nIngrese un valor valido para el precio (mayor a 0)" << endl;
                 cin >> priced;
             }
 
+            while (cantity <= 0)
+            {
+                cout << "\nIngrese mas de un producto (mayor a 0)" << endl;
+                cin >> cantity;
+            }
+
             product.price = priced;
+            product.cant = cantity;
 
             if (category == 1)
             {
